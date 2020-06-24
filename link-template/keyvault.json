@@ -67,7 +67,7 @@
                 "attributes": {
                     "enabled": true
                 },
-                "value": "[parameters('serviceBusPrimaryConnString')]" //"[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').primaryConnectionString]"
+                "value": "[listkeys(parameters('serviceBusPrimaryConnString'), '2017-04-01').primaryConnectionString]"
             }
         },
         {
@@ -83,7 +83,7 @@
                 "attributes": {
                     "enabled": true
                 },
-                "value": "[parameters('serviceBusSecondaryConnString')]" //"[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
+                "value": "[listkeys(parameters('serviceBusPrimaryConnString'), '2017-04-01').primaryConnectionString]" //"[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
             }
         }
     ],
