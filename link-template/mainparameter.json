@@ -1,0 +1,18 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "namespaces_oneittelemetrybulking_name": {
+            "value": "oneittelemetrybulking1"
+        },
+        "environment": {
+            "value": "PRE-PRODUCTION"
+        },
+        "tenantId": {
+            "value": "2307c54b-7fe8-451c-8166-3a40ae637109"
+        },
+        "vaults_bulkingkeyvault_name": {
+            "value": "bulkingkeyvault1"
+        }
+    }
+}
