@@ -2,14 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "keyVaultName": {
-            "defaultValue": "bulkingkeyvault_dr",
-            "type": "string"
-        },
-        "tenantId": {
-            "type": "string",
-            "defaultValue": "[subscription().tenantId]"
-        },
         "environment": {
             "type": "string",
             "allowedValues": [
@@ -17,7 +9,8 @@
                 "Production"
             ]
         },
-        "serviceBusAuthRuleResourceId": {
+        "keyVaultName": {
+            "defaultValue": "bulkingkeyvault_dr",
             "type": "string"
         },
         "objectId": {
@@ -45,10 +38,10 @@
                     "family": "A",
                     "name": "standard"
                 },
-                "tenantId": "[parameters('tenantId')]",
+                "tenantId": "[subscription().tenantId]",
                 "accessPolicies": [
                     {
-                        "tenantId": "[parameters('tenantId')]",
+                        "tenantId": "[subscription().tenantId]",
                         "objectId": "[parameters('objectId')]",
                         "permissions": {
                             "keys": [
@@ -71,36 +64,6 @@
                 "enabledForDeployment": true,
                 "enabledForDiskEncryption": true,
                 "enabledForTemplateDeployment": true
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('keyVaultName'), '/ServiceBusConnString')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "[listkeys(parameters('serviceBusAuthRuleResourceId'), '2017-04-01').primaryConnectionString]"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('keyVaultName'), '/ServiceBusConnStringSec')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "[listkeys(parameters('serviceBusAuthRuleResourceId'), '2017-04-01').primaryConnectionString]"
             }
         }
     ],
