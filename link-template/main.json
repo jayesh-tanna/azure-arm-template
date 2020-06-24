@@ -15,7 +15,7 @@
         },
         "tenantId": {
             "type": "string",
-            "defaultValue": "[subscription().tenantId]" //"2307c54b-7fe8-451c-8166-3a40ae637109"
+            "defaultValue": "[subscription().tenantId]" 
         },
         "vaults_bulkingkeyvault_name": {
             "defaultValue": "bulkingkeyvault1",
@@ -41,8 +41,8 @@
                     "environment": {
                         "value": "[parameters('environment')]"
                     },
-                    "namespaces_oneittelemetrybulking_name":{
-                        "value":"[parameters('namespaces_oneittelemetrybulking_name')]"
+                    "namespaces_oneittelemetrybulking_name": {
+                        "value": "[parameters('namespaces_oneittelemetrybulking_name')]"
                     }
                 }
             }
@@ -51,7 +51,9 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "name": "[variables('keyVaultTemplateName')]",
-            "dependsOn": ["serviceBusTemplate"],
+            "dependsOn": [
+                "serviceBusTemplate"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -62,11 +64,17 @@
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
                     },
-                    "vaults_bulkingkeyvault_name":{
-                        "value":"[parameters('vaults_bulkingkeyvault_name')]"
+                    "vaults_bulkingkeyvault_name": {
+                        "value": "[parameters('vaults_bulkingkeyvault_name')]"
                     },
-                    "environment":{
-                        "value":"[parameters('environment')]"
+                    "environment": {
+                        "value": "[parameters('environment')]"
+                    },
+                    "serviceBusPrimaryConnString": {
+                        "value": "[listkeys(reference('serviceBusTemplate').outputs.authRuleResourceId.value, '2017-04-01').primaryConnectionString]"
+                    },
+                    "serviceBusSecondaryConnString":{
+                        "value": "[listkeys(reference('serviceBusTemplate').outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
                     }
                 }
             }
