@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "namespaces_oneittelemetrybulking_name": {
-            "defaultValue": "oneittelemetrybulking1",
+        "serviceBusName": {
+            "defaultValue": "oneittelemetrybulking_dr",
             "type": "String"
         },
         "environment": {
@@ -16,14 +16,14 @@
     },
     "variables": {
         "defaultSASKeyName": "RootManageSharedAccessKey",
-        "namespacesAuthorizationRulesName": "[concat(parameters('namespaces_oneittelemetrybulking_name'),'/',variables('defaultSASKeyName'))]",
-        "authRuleResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('namespaces_oneittelemetrybulking_name'), variables('defaultSASKeyName'))]"
+        "namespacesAuthorizationRulesName": "[concat(parameters('serviceBusName'),'/',variables('defaultSASKeyName'))]",
+        "authRuleResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('serviceBusName'), variables('defaultSASKeyName'))]"
     },
     "resources": [
         {
             "type": "Microsoft.ServiceBus/namespaces",
             "apiVersion": "2018-01-01-preview",
-            "name": "[parameters('namespaces_oneittelemetrybulking_name')]",
+            "name": "[parameters('serviceBusName')]",
             "location": "[resourceGroup().location]",
             "tags": {
                 "appID": "auto",
@@ -45,7 +45,7 @@
             "name": "[variables('namespacesAuthorizationRulesName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_oneittelemetrybulking_name'))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusName'))]"
             ],
             "properties": {
                 "rights": [
@@ -58,10 +58,10 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/queues",
             "apiVersion": "2017-04-01",
-            "name": "[concat(parameters('namespaces_oneittelemetrybulking_name'), '/heartconfig')]",
+            "name": "[concat(parameters('serviceBusName'), '/heartconfig')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_oneittelemetrybulking_name'))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusName'))]"
             ],
             "properties": {
                 "lockDuration": "PT30S",
@@ -82,10 +82,10 @@
         {
             "type": "Microsoft.ServiceBus/namespaces/queues",
             "apiVersion": "2017-04-01",
-            "name": "[concat(parameters('namespaces_oneittelemetrybulking_name'), '/transformer')]",
+            "name": "[concat(parameters('serviceBusName'), '/transformer')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_oneittelemetrybulking_name'))]"
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('serviceBusName'))]"
             ],
             "properties": {
                 "lockDuration": "PT1M",
