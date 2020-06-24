@@ -28,8 +28,8 @@
     "variables": {
         "serviceBusTemplateName": "serviceBusTemplate",
         "keyVaultTemplateName": "keyVaultTemplate",
-        "serviceBusResourceName": "[concat(parameters('serviceBusName'),'_',parameters('resource_suffix'))]",
-        "keyVaultResourceName": "[concat(parameters('keyVaultName'),'_',parameters('resource_suffix'))]"
+        "serviceBusResourceName": "[concat(parameters('serviceBusName'),parameters('resource_suffix'))]",
+        "keyVaultResourceName": "[concat(parameters('keyVaultName'),parameters('resource_suffix'))]"
     },
     "resources": [
         {
