@@ -71,10 +71,10 @@
                         "value": "[parameters('environment')]"
                     },
                     "serviceBusPrimaryConnString": {
-                        "value": "[listkeys(reference('serviceBusTemplate').outputs.authRuleResourceId.value, '2017-04-01').primaryConnectionString]"
+                        "value": "[reference('serviceBusTemplate').outputs.authRuleResourceId.value]"
                     },
                     "serviceBusSecondaryConnString":{
-                        "value": "[listkeys(reference('serviceBusTemplate').outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
+                        "value": "[reference('serviceBusTemplate').outputs.authRuleResourceId.value]"
                     }
                 }
             }
