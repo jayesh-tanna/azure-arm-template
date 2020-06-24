@@ -23,6 +23,9 @@
         "keyVaultName": {
             "defaultValue": "bulkingkeyvault",
             "type": "string"
+        },
+        "objectId": {
+            "type": "string"
         }
     },
     "variables": {
@@ -77,6 +80,9 @@
                     },
                     "serviceBusAuthRuleResourceId": {
                         "value": "[reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value]"
+                    },
+                    "objectId":{
+                        "value":"[parameters('objectId')]"
                     }
                 }
             }
