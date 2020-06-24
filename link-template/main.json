@@ -52,7 +52,7 @@
             "apiVersion": "2019-10-01",
             "name": "[variables('keyVaultTemplateName')]",
             "dependsOn": [
-                "serviceBusTemplate"
+                "[variables('serviceBusTemplateName')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -70,11 +70,8 @@
                     "environment": {
                         "value": "[parameters('environment')]"
                     },
-                    "serviceBusPrimaryConnString": {
-                        "value": "[reference('serviceBusTemplate').outputs.authRuleResourceId.value]"
-                    },
-                    "serviceBusSecondaryConnString":{
-                        "value": "[reference('serviceBusTemplate').outputs.authRuleResourceId.value]"
+                    "serviceBusAuthRuleResourceId": {
+                        "value": "[reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value]"
                     }
                 }
             }
