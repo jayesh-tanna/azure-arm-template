@@ -77,7 +77,7 @@
                 "attributes": {
                     "enabled": true
                 },
-                "value": "[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
+                "value": "this is sec" //"[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
             }
         }
     ],
