@@ -4,7 +4,7 @@
     "parameters": {
         "keyVaultName": {
             "defaultValue": "bulkingkeyvault_dr",
-            "type": "String"
+            "type": "string"
         },
         "tenantId": {
             "type": "string",
