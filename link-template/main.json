@@ -5,10 +5,6 @@
         "resource_suffix": {
             "type": "string"
         },
-        "serviceBusName": {
-            "defaultValue": "oneittelemetrybulking",
-            "type": "string"
-        },
         "environment": {
             "type": "string",
             "allowedValues": [
@@ -16,9 +12,17 @@
                 "Production"
             ]
         },
-        "tenantId": {
+        "deploymentMode": {
             "type": "string",
-            "defaultValue": "[subscription().tenantId]"
+            "defaultValue": "Incremental",
+            "allowedValues": [
+                "Incremental",
+                "Complete"
+            ]
+        },
+        "serviceBusName": {
+            "defaultValue": "oneittelemetrybulking",
+            "type": "string"
         },
         "keyVaultName": {
             "defaultValue": "bulkingkeyvault",
@@ -29,8 +33,9 @@
         }
     },
     "variables": {
-        "serviceBusTemplateName": "serviceBusTemplate",
-        "keyVaultTemplateName": "keyVaultTemplate",
+        "serviceBusTemplateName": "serviceBus",
+        "keyVaultTemplateName": "keyVault",
+        "keyVaultSecretsTemplateName": "keyVaultSecrets",
         "serviceBusResourceName": "[concat(parameters('serviceBusName'),parameters('resource_suffix'))]",
         "keyVaultResourceName": "[concat(parameters('keyVaultName'),parameters('resource_suffix'))]"
     },
@@ -40,7 +45,7 @@
             "apiVersion": "2019-10-01",
             "name": "[variables('serviceBusTemplateName')]",
             "properties": {
-                "mode": "Incremental",
+                "mode": "[parameters('deploymentMode')]",
                 "templateLink": {
                     "uri": "[uri(deployment().properties.templateLink.uri, 'servicebus.json')]", //"https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/servicebus.json",
                     "contentVersion": "1.0.0.0"
@@ -59,30 +64,44 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "name": "[variables('keyVaultTemplateName')]",
-            "dependsOn": [
-                "[variables('serviceBusTemplateName')]"
-            ],
             "properties": {
-                "mode": "Incremental",
+                "mode": "[parameters('deploymentMode')]",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'keyvault.json')]", //"https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/keyvault.json",
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'keyvault.json')]", 
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "tenantId": {
-                        "value": "[parameters('tenantId')]"
+                    "environment": {
+                        "value": "[parameters('environment')]"
                     },
                     "keyVaultName": {
                         "value": "[variables('keyVaultResourceName')]"
                     },
-                    "environment": {
-                        "value": "[parameters('environment')]"
+                    "objectId": {
+                        "value": "[parameters('objectId')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[variables('keyVaultSecretsTemplateName')]",
+            "dependsOn": [
+                "[variables('keyVaultTemplateName')]"
+            ],
+            "properties": {
+                "mode": "[parameters('deploymentMode')]",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'keyvaultsecrets.json')]", 
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('keyVaultResourceName')]"
                     },
                     "serviceBusAuthRuleResourceId": {
                         "value": "[reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value]"
-                    },
-                    "objectId":{
-                        "value":"[parameters('objectId')]"
                     }
                 }
             }
