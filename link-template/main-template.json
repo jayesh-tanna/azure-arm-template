@@ -1,1 +1,77 @@
-this is main template
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "namespaces_oneittelemetrybulking_name": {
+            "defaultValue": "oneittelemetrybulking1",
+            "type": "String"
+        },
+        "environment": {
+            "type": "string",
+            "allowedValues": [
+                "PRE-PRODUCTION",
+                "Production"
+            ]
+        },
+        "tenantId": {
+            "type": "string",
+            "defaultValue": "[subscription().tenantId]" //"2307c54b-7fe8-451c-8166-3a40ae637109"
+        },
+        "vaults_bulkingkeyvault_name": {
+            "defaultValue": "bulkingkeyvault1",
+            "type": "String"
+        }
+    },
+    "variables": {
+        "serviceBusTemplateName": "serviceBusTemplate",
+        "keyVaultTemplateName": "keyVaultTemplate"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[variables('serviceBusTemplateName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/servicebus.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "environment": {
+                        "value": "[parameters('environment')]"
+                    },
+                    "namespaces_oneittelemetrybulking_name":{
+                        "value":"[parameters('namespaces_oneittelemetrybulking_name')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[variables('keyVaultTemplateName')]",
+            "dependsOn": ["variables('serviceBusTemplateName')"],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/keyvault.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "tenantId": {
+                        "value": "[parameters('tenantId')]"
+                    },
+                    "vaults_bulkingkeyvault_name":{
+                        "value":"[parameters('vaults_bulkingkeyvault_name')]"
+                    },
+                    "environment":{
+                        "value":"[parameters('environment')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
