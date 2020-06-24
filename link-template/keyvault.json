@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vaults_bulkingkeyvault_name": {
-            "defaultValue": "bulkingkeyvault1",
+        "keyVaultName": {
+            "defaultValue": "bulkingkeyvault_dr",
             "type": "String"
         },
         "tenantId": {
@@ -29,7 +29,7 @@
         {
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2016-10-01",
-            "name": "[parameters('vaults_bulkingkeyvault_name')]",
+            "name": "[parameters('keyVaultName')]",
             "location": "[resourceGroup().location]",
             "tags": {
                 "appID": "auto",
@@ -53,10 +53,10 @@
         {
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnString')]",
+            "name": "[concat(parameters('keyVaultName'), '/ServiceBusConnString')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"
+                "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
             ],
             "properties": {
                 "attributes": {
@@ -68,10 +68,10 @@
         {
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnStringSec')]",
+            "name": "[concat(parameters('keyVaultName'), '/ServiceBusConnStringSec')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"
+                "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]"
             ],
             "properties": {
                 "attributes": {
