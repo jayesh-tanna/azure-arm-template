@@ -1,1 +1,86 @@
-this is key vault section
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaults_bulkingkeyvault_name": {
+            "defaultValue": "bulkingkeyvault1",
+            "type": "String"
+        },
+        "tenantId": {
+            "type": "string",
+            "defaultValue": "2307c54b-7fe8-451c-8166-3a40ae637109"
+        },
+        "environment": {
+            "type": "string",
+            "allowedValues": [
+                "PRE-PRODUCTION",
+                "Production"
+            ]
+        }
+    },
+    "functions": [
+    ],
+    "variables": {
+        "serviceBusTemplateName": "serviceBusTemplate"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2016-10-01",
+            "name": "[parameters('vaults_bulkingkeyvault_name')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "appID": "auto",
+                "env": "[parameters('environment')]",
+                "orgID": "auto",
+                "environment": "[parameters('environment')]"
+            },
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "standard"
+                },
+                "tenantId": "[parameters('tenantId')]",
+                "accessPolicies": [
+                ],
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enabledForTemplateDeployment": true
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2016-10-01",
+            "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnString')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]",
+                "[variables('serviceBusTemplateName')]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                },
+                "value": "[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').primaryConnectionString]"
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2016-10-01",
+            "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnStringSec')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]",
+                "[variables('serviceBusTemplateName')]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                },
+                "value": "[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
