@@ -61,7 +61,7 @@
                 "attributes": {
                     "enabled": true
                 },
-                "value": "[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').primaryConnectionString]"
+                "value": "this is test" //"[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').primaryConnectionString]"
             }
         },
         {
