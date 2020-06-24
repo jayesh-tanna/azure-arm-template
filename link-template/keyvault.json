@@ -19,6 +19,9 @@
         },
         "serviceBusAuthRuleResourceId": {
             "type": "string"
+        },
+        "objectId": {
+            "type": "string"
         }
     },
     "functions": [
@@ -44,6 +47,26 @@
                 },
                 "tenantId": "[parameters('tenantId')]",
                 "accessPolicies": [
+                    {
+                        "tenantId": "[parameters('tenantId')]",
+                        "objectId": "[parameters('objectId')]",
+                        "permissions": {
+                            "keys": [
+                                "Get",
+                                "List"
+                            ],
+                            "secrets": [
+                                "Get",
+                                "List"
+                            ],
+                            "certificates": [
+                                "Get",
+                                "List",
+                                "GetIssuers",
+                                "ListIssuers"
+                            ]
+                        }
+                    }
                 ],
                 "enabledForDeployment": true,
                 "enabledForDiskEncryption": true,
