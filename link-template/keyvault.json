@@ -17,17 +17,13 @@
                 "Production"
             ]
         },
-        "serviceBusPrimaryConnString":{
-            "type": "string"
-        },
-        "serviceBusSecondaryConnString": {
+        "serviceBusAuthRuleResourceId": {
             "type": "string"
         }
     },
     "functions": [
     ],
     "variables": {
-        "serviceBusTemplateName": "serviceBusTemplate"
     },
     "resources": [
         {
@@ -60,14 +56,13 @@
             "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnString')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"//,
-                //"[variables('serviceBusTemplateName')]"
+                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"
             ],
             "properties": {
                 "attributes": {
                     "enabled": true
                 },
-                "value": "[listkeys(parameters('serviceBusPrimaryConnString'), '2017-04-01').primaryConnectionString]"
+                "value": "[listkeys(parameters('serviceBusAuthRuleResourceId'), '2017-04-01').primaryConnectionString]"
             }
         },
         {
@@ -76,14 +71,13 @@
             "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnStringSec')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"//,
-                //"[variables('serviceBusTemplateName')]"
+                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"
             ],
             "properties": {
                 "attributes": {
                     "enabled": true
                 },
-                "value": "[listkeys(parameters('serviceBusPrimaryConnString'), '2017-04-01').primaryConnectionString]" //"[listkeys(reference(variables('serviceBusTemplateName')).outputs.authRuleResourceId.value, '2017-04-01').secondaryConnectionString]"
+                "value": "[listkeys(parameters('serviceBusAuthRuleResourceId'), '2017-04-01').primaryConnectionString]"
             }
         }
     ],
