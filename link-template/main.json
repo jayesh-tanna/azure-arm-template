@@ -7,7 +7,7 @@
         },
         "serviceBusName": {
             "defaultValue": "oneittelemetrybulking",
-            "type": "String"
+            "type": "string"
         },
         "environment": {
             "type": "string",
@@ -22,7 +22,7 @@
         },
         "keyVaultName": {
             "defaultValue": "bulkingkeyvault",
-            "type": "String"
+            "type": "string"
         }
     },
     "variables": {
