@@ -34,7 +34,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/servicebus.json",
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'servicebus.json')]", //"https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/servicebus.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -55,7 +55,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/keyvault.json",
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'keyvault.json')]", //"https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/keyvault.json",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
