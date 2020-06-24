@@ -8,7 +8,7 @@
         },
         "tenantId": {
             "type": "string",
-            "defaultValue": "2307c54b-7fe8-451c-8166-3a40ae637109"
+            "defaultValue": "[subscription().tenantId]"
         },
         "environment": {
             "type": "string",
@@ -54,8 +54,8 @@
             "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnString')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]",
-                "[variables('serviceBusTemplateName')]"
+                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"//,
+                //"[variables('serviceBusTemplateName')]"
             ],
             "properties": {
                 "attributes": {
@@ -70,8 +70,8 @@
             "name": "[concat(parameters('vaults_bulkingkeyvault_name'), '/ServiceBusConnStringSec')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]",
-                "[variables('serviceBusTemplateName')]"
+                "[concat('Microsoft.KeyVault/vaults/', parameters('vaults_bulkingkeyvault_name'))]"//,
+                //"[variables('serviceBusTemplateName')]"
             ],
             "properties": {
                 "attributes": {
