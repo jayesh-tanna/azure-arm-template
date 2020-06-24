@@ -2,8 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "namespaces_oneittelemetrybulking_name": {
-            "defaultValue": "oneittelemetrybulking1",
+        "resource_suffix": {
+            "type": "string"
+        },
+        "serviceBusName": {
+            "defaultValue": "oneittelemetrybulking",
             "type": "String"
         },
         "environment": {
@@ -15,16 +18,18 @@
         },
         "tenantId": {
             "type": "string",
-            "defaultValue": "[subscription().tenantId]" 
+            "defaultValue": "[subscription().tenantId]"
         },
-        "vaults_bulkingkeyvault_name": {
-            "defaultValue": "bulkingkeyvault1",
+        "keyVaultName": {
+            "defaultValue": "bulkingkeyvault",
             "type": "String"
         }
     },
     "variables": {
         "serviceBusTemplateName": "serviceBusTemplate",
-        "keyVaultTemplateName": "keyVaultTemplate"
+        "keyVaultTemplateName": "keyVaultTemplate",
+        "serviceBusResourceName": "[concat(parameters('serviceBusName'),'_',parameters('resource_suffix'))]",
+        "keyVaultResourceName": "[concat(parameters('keyVaultName'),'_',parameters('resource_suffix'))]"
     },
     "resources": [
         {
@@ -41,8 +46,8 @@
                     "environment": {
                         "value": "[parameters('environment')]"
                     },
-                    "namespaces_oneittelemetrybulking_name": {
-                        "value": "[parameters('namespaces_oneittelemetrybulking_name')]"
+                    "serviceBusName": {
+                        "value": "[variables('serviceBusResourceName')]"
                     }
                 }
             }
@@ -64,8 +69,8 @@
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
                     },
-                    "vaults_bulkingkeyvault_name": {
-                        "value": "[parameters('vaults_bulkingkeyvault_name')]"
+                    "keyVaultName": {
+                        "value": "[variables('keyVaultResourceName')]"
                     },
                     "environment": {
                         "value": "[parameters('environment')]"
