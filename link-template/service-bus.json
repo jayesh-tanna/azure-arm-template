@@ -1,1 +1,113 @@
-this is serice bus placeholder
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "namespaces_oneittelemetrybulking_name": {
+            "defaultValue": "oneittelemetrybulking1",
+            "type": "String"
+        },
+        "environment": {
+            "type": "string",
+            "allowedValues": [
+                "PRE-PRODUCTION",
+                "Production"
+            ]
+        }
+    },
+    "variables": {
+        "defaultSASKeyName": "RootManageSharedAccessKey",
+        "namespacesAuthorizationRulesName": "[concat(parameters('namespaces_oneittelemetrybulking_name'),'/',variables('defaultSASKeyName'))]",
+        "authRuleResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('namespaces_oneittelemetrybulking_name'), variables('defaultSASKeyName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.ServiceBus/namespaces",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[parameters('namespaces_oneittelemetrybulking_name')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "appID": "auto",
+                "orgID": "auto",
+                "env": "[parameters('environment')]",
+                "environment": "[parameters('environment')]"
+            },
+            "sku": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "properties": {
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+            "apiVersion": "2017-04-01",
+            "name": "[variables('namespacesAuthorizationRulesName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_oneittelemetrybulking_name'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen",
+                    "Manage",
+                    "Send"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/queues",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_oneittelemetrybulking_name'), '/heartconfig')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_oneittelemetrybulking_name'))]"
+            ],
+            "properties": {
+                "lockDuration": "PT30S",
+                "maxSizeInMegabytes": 1024,
+                "requiresDuplicateDetection": false,
+                "requiresSession": false,
+                "defaultMessageTimeToLive": "P14D",
+                "deadLetteringOnMessageExpiration": false,
+                "enableBatchedOperations": true,
+                "duplicateDetectionHistoryTimeWindow": "PT10M",
+                "maxDeliveryCount": 10,
+                "status": "Active",
+                "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                "enablePartitioning": false,
+                "enableExpress": false
+            }
+        },
+        {
+            "type": "Microsoft.ServiceBus/namespaces/queues",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_oneittelemetrybulking_name'), '/transformer')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ServiceBus/namespaces', parameters('namespaces_oneittelemetrybulking_name'))]"
+            ],
+            "properties": {
+                "lockDuration": "PT1M",
+                "maxSizeInMegabytes": 1024,
+                "requiresDuplicateDetection": false,
+                "requiresSession": false,
+                "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
+                "deadLetteringOnMessageExpiration": true,
+                "enableBatchedOperations": true,
+                "duplicateDetectionHistoryTimeWindow": "PT10M",
+                "maxDeliveryCount": 10,
+                "status": "Active",
+                "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
+                "enablePartitioning": false,
+                "enableExpress": false
+            }
+        }
+    ],
+    "outputs": {
+        "authRuleResourceId": {
+            "type": "string",
+            "value": "[variables('authRuleResourceId')]"
+        }
+    }
+}
