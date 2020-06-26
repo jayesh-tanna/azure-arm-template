@@ -47,7 +47,7 @@
             "properties": {
                 "mode": "[parameters('deploymentMode')]",
                 "templateLink": {
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'servicebus.json')]", //"https://github.com/jayesh-tanna/azure-arm-template/blob/master/link-template/servicebus.json",
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'servicebus.json')]", 
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
